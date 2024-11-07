@@ -23,14 +23,10 @@ Book.prototype.removeBook = function () {
 
 const myLibrary = [];
 
-function addBookToLibrary(title, author, pages) {
+function addBookToLibrary(title, author, pages, isRead) {
     const book = new Book(title, author, pages);
+    book.isRead = isRead;
     myLibrary.push(book);
-    displayBooks();
-}
-
-function removeBook(index) {
-    myLibrary.splice(index, 1)
     displayBooks();
 }
 
@@ -72,20 +68,18 @@ function displayBooks() {
 document.getElementById('bookForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
-    const title = document.getElementById('title').value;
-    const author = document.getElementById('author').value;
-    const pages = document.getElementById('pages').value;
     const isRead = document.getElementById('read').checked;
-    const book = new Book(title, author, pages);
-    book.isRead = isRead;
-    myLibrary.push(book);
-    displayBooks();
+
+    addBookToLibrary(
+        document.getElementById('title').value,
+        document.getElementById('author').value,
+        document.getElementById('pages').value,
+        isRead
+    );
     document.getElementById('bookForm').reset();
 });
-
 
 addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295)
 addBookToLibrary("The Lord of the Rings", "J.R.R. Tolkien", 1216)
 addBookToLibrary("The Silmarillion", "J.R.R. Tolkien", 365)
 addBookToLibrary("The Fellowship of the Ring", "J.R.R. Tolkien", 423)
-
