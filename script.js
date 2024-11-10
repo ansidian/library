@@ -99,6 +99,7 @@ Book.prototype.removeBook = function () {
 function addBookToLibrary(title, author, pages, isRead) {
     const book = new Book(title, author, pages);
     book.isRead = isRead;
+
     myLibrary.push(book)
 
     if (book.isRead) {
@@ -151,14 +152,12 @@ function displayBooks(filter) {
 
 document.getElementById('bookForm').addEventListener('submit', function (e) {
     e.preventDefault();
-
-    const isRead = document.getElementById('read').checked;
-
+    
     addBookToLibrary(
         document.getElementById('title').value,
         document.getElementById('author').value,
         document.getElementById('pages').value,
-        isRead
+        document.getElementById('isRead').checked
     );
     document.getElementById('bookForm').reset();
 });
