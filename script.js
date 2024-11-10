@@ -1,7 +1,9 @@
+/** Modal Functionality */
+
 const modal = document.querySelector(".book-modal");
 const overlay = document.querySelector(".book-overlay");
-const openModalBtn = document.querySelector(".book-add-btn");
-const closeModalBtn = document.querySelector(".book-close-btn");
+const openForm = document.querySelector(".book-add-btn");
+const closeForm = document.querySelector(".book-close-btn");
 
 // close modal function
 const closeModal = function () {
@@ -9,8 +11,8 @@ const closeModal = function () {
     overlay.classList.add("hidden");
 };
 
-// close the modal when the close button and overlay is clicked
-closeModalBtn.addEventListener("click", closeModal);
+// close modal when the close button  is pressed
+closeForm.addEventListener("click", closeModal);
 overlay.addEventListener("click", closeModal);
 
 // close modal when the Esc key is pressed
@@ -26,7 +28,9 @@ const openModal = function () {
     overlay.classList.remove("hidden");
 };
 // open modal event
-openModalBtn.addEventListener("click", openModal);
+openForm.addEventListener("click", openModal);
+
+/** Library Management */
 
 const myLibrary = [];
 
@@ -74,8 +78,8 @@ function displayBooks() {
             <p>Author: ${book.author}</p>
             <p>Pages: ${book.pages}</p>
             <p>Status: ${book.isRead ? "Read" : "Not Read"}</p></p>
-            <button class="toggle-read">Read?</button>
-            <button class="remove-book">Remove Book</button>
+            <button class="toggle-read">${book.isRead ? "Mark as Unread" : "Mark as Read"}</button>
+            <button class="remove-book">Delete</button>
         `;
 
         const toggleRead = bookCard.querySelector('.toggle-read');
