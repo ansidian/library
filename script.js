@@ -4,6 +4,7 @@ const modal = document.querySelector(".book-modal");
 const overlay = document.querySelector(".book-overlay");
 const openForm = document.querySelector(".book-add-btn");
 const closeForm = document.querySelector(".book-close-btn");
+const filter = document.querySelectorAll(".filter-item input[type='radio']");
 
 // close modal function
 const closeModal = function () {
@@ -32,7 +33,6 @@ openForm.addEventListener("click", openModal);
 
 /** Library Management */
 
-const myLibrary = [];
 
 function Book(title, author, pages) {
     this.title = title;
@@ -47,40 +47,91 @@ Book.prototype.info = function () {
 
 Book.prototype.toggleRead = function () {
     this.isRead = !this.isRead;
+    updateBookArrays(this);
+    updateView();
+}
+
+function updateBookArrays(book) {
+    if (book.isRead) {
+        readBooks.push(book);
+        unreadBooks.splice(unreadBooks.indexOf(book), 1);
+    } else if (!book.isRead) {
+        unreadBooks.push(book);
+        readBooks.splice(readBooks.indexOf(book), 1);
+    }
+}
+
+function updateView() {
+    switch (getCurrentFilter()) {
+        case "unread":
+            displayBooks(unreadBooks);
+            break;
+        case "read":
+            displayBooks(readBooks);
+            break;
+        default:
+            displayBooks(myLibrary);
+    }
 }
 
 Book.prototype.removeBook = function () {
-    const index = myLibrary.indexOf(this);
-    if (index !== -1) {
-        myLibrary.splice(index, 1);
-        displayBooks();
+    const myLibraryIndex = myLibrary.indexOf(this);
+    const readIndex = readBooks.indexOf(this);
+    const unreadIndex = unreadBooks.indexOf(this);
+
+    if (getCurrentFilter() === "unread" && unreadIndex !== -1) {
+        unreadBooks.splice(unreadIndex, 1);
+        myLibrary.splice(myLibraryIndex, 1);
+    } else if (getCurrentFilter() === "read" && readIndex !== -1) {
+        readBooks.splice(readIndex, 1);
+        myLibrary.splice(myLibraryIndex, 1);
+    } else if (getCurrentFilter() === "all" && myLibraryIndex !== -1) {
+        myLibrary.splice(myLibraryIndex, 1);
+        if (this.isRead && readIndex !== -1) {
+            readBooks.splice(readIndex, 1);
+        } else if (!this.isRead && unreadIndex !== -1) {
+            unreadBooks.splice(unreadIndex, 1);
+        }
     }
+    updateView();
 }
 
 function addBookToLibrary(title, author, pages, isRead) {
     const book = new Book(title, author, pages);
     book.isRead = isRead;
-    myLibrary.push(book);
+    myLibrary.push(book)
+
+    if (book.isRead) {
+        readBooks.push(book);
+    } else if (!book.isRead) {
+        unreadBooks.push(book);
+    }
     closeModal();
-    displayBooks();
+    updateView();
 }
 
-function displayBooks() {
+const myLibrary = [];
+const unreadBooks = myLibrary.filter((book) => !book.isRead);
+const readBooks = myLibrary.filter((book) => book.isRead);
+
+function displayBooks(filter) {
     const bookList = document.getElementById('libraryDisplay')
     bookList.innerHTML = '';
 
-    myLibrary.forEach((book, index) => {
+    filter.forEach((book) => {
         const bookCard = document.createElement('div');
-        bookCard.dataset.index = String(index);
+        bookCard.dataset.index = String(myLibrary.indexOf(book));
         bookCard.classList.add("book-card");
         bookCard.innerHTML = `
-            <h3>${book.title}</h3>
-            <p>Author: ${book.author}</p>
-            <p>Pages: ${book.pages}</p>
-            <p>Status: ${book.isRead ? "Read" : "Not Read"}</p></p>
-            <button class="toggle-read">${book.isRead ? "Mark as Unread" : "Mark as Read"}</button>
-            <button class="remove-book">Delete</button>
-        `;
+                <div class="card-content">
+                    <h3>${book.title}</h3>
+                    <p>Author: ${book.author}</p>
+                    <p>Pages: ${book.pages}</p>
+                    <p>Status: ${book.isRead ? "Read ✅" : "Unread ❌"}</p></p>
+                    <button class="toggle-read ${book.isRead ? "read" : "not-read"}"> ${book.isRead ? "Mark as Unread" : "Mark as Read"}</button>
+                    <button class="remove-book">Delete</button>
+                </div>
+            `;
 
         const toggleRead = bookCard.querySelector('.toggle-read');
         const removeBook = bookCard.querySelector('.remove-book');
@@ -88,13 +139,11 @@ function displayBooks() {
         toggleRead.addEventListener('click', () => {
             const index = parseInt(bookCard.dataset.index)
             myLibrary[index].toggleRead();
-            displayBooks();
         });
 
         removeBook.addEventListener('click', () => {
             const index = parseInt(bookCard.dataset.index);
-            myLibrary[index].removeBook();
-            displayBooks();
+            myLibrary[index].removeBook(index);
         });
         bookList.appendChild(bookCard);
     });
@@ -114,7 +163,45 @@ document.getElementById('bookForm').addEventListener('submit', function (e) {
     document.getElementById('bookForm').reset();
 });
 
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295)
-addBookToLibrary("The Lord of the Rings", "J.R.R. Tolkien", 1216)
-addBookToLibrary("The Silmarillion", "J.R.R. Tolkien", 365)
-addBookToLibrary("The Fellowship of the Ring", "J.R.R. Tolkien", 423)
+/*0*/
+addBookToLibrary("The Hobbit", "J.R.R. Tolkien", 295, false);
+/*1*/
+addBookToLibrary("Dune", "Frank Herbert", 412, false);
+/*2*/
+addBookToLibrary("1984", "George Orwell", 328, true);
+/*3*/
+addBookToLibrary("Pride and Prejudice", "Jane Austen", 432, true);
+/*4*/
+addBookToLibrary("The Name of the Wind", "Patrick Rothfuss", 662, false);
+/*5*/
+addBookToLibrary("The Road", "Cormac McCarthy", 287, false);
+/*6*/
+addBookToLibrary("Neuromancer", "William Gibson", 271, true);
+/*7*/
+addBookToLibrary("The Great Gatsby", "F. Scott Fitzgerald", 180, false);
+/*8*/
+addBookToLibrary("Foundation", "Isaac Asimov", 244, true);
+
+function getCurrentFilter() {
+    const filter = document.querySelectorAll(".filter-item input[type='radio']:checked");
+    return filter[0].value;
+}
+
+filter.forEach((item) => {
+    item.addEventListener("change", () => {
+        switch (item.value) {
+            case "all":
+                displayBooks(myLibrary);
+                break;
+            case "unread":
+                displayBooks(unreadBooks);
+                break;
+            case "read":
+                displayBooks(readBooks);
+                break;
+        }
+    });
+});
+
+displayBooks(myLibrary)
+

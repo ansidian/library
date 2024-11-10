@@ -35,19 +35,28 @@
 	</section>
 	<div class="book-overlay hidden"></div>
 	<div class="button-group">
-		<button class="book-add-btn">+ Add Book</button>
+		<button class="book-add-btn"> + <br>add new book</button>
 		<div class="filter">
-			<div class="radio-group">
-				<input type="radio" id="all" name="filter" value="all">
-				<label for="all">All</label>
-			</div>
-			<div class="radio-group">
-				<input type="radio" id="unread" name="filter" value="unread">
-				<label for="unread">Unread</label>
-			</div>
-			<div class="radio-group">
-				<input type="radio" id="read" name="filter" value="read">
-				<label for="read">Read</label></div>
+			<ul class="filter-list">
+				<li class="filter-item">
+					<div class="radio-group">
+						<input type="radio" id="all" name="filter" value="all" checked="checked">
+						<label for="all" class="filter-label">All</label>
+					</div>
+				</li>
+				<li class="filter-item">
+					<div class="radio-group">
+						<input type="radio" id="unread" name="filter" value="unread">
+						<label for="unread" class="filter-label">Unread</label>
+					</div>
+				</li>
+				<li class="filter-item">
+					<div class="radio-group">
+						<input type="radio" id="read" name="filter" value="read">
+						<label for="read" class="filter-label">Read</label>
+					</div>
+				</li>
+			</ul>
 		</div>
 	</div>
 	<div class="library-display wrapper">
