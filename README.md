@@ -11,7 +11,6 @@ curriculum, this assignment pushed me to apply JavaScript OOP principles and get
 - Toggle read/unread status for books
 - Remove books from the library
 - Sort books by read, unread, or all
-- Responsive grid layout for book display
 - Modern modal form interface for adding new books
 
 ## Technologies Used
@@ -59,6 +58,7 @@ feature required:
 - [ ] Add local storage functionality
 - [ ] Implement search functionality
 - [ ] Add book categories/tags
+- [ ] Make it fully responsive
 
 ## Learning Journey
 
@@ -68,5 +68,5 @@ This project was an excellent opportunity to:
 2. Implement OOP concepts in JavaScript
 3. Debug complex functionality
 4. Handle user interactions effectively
-5. Create responsive and intuitive UI
+5. Get a taste for better UI / UX
 
